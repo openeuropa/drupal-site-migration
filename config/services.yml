@@ -1,5 +1,7 @@
 parameters:
   fractal.base_url: 'http://example.com'
+  drupal.root: '/var/www/html/site/web'
+  drupal.uri: 'http://drupal.docker.localhost:8000'
 
 services:
   _defaults:
@@ -7,6 +9,11 @@ services:
 
   OpenEuropa\DrupalSiteMigration\:
     resource: '../src'
+
+  Drupal\Driver\DrupalDriver:
+    arguments: [ '%drupal.root%', '%drupal.uri%' ]
+    calls:
+      - [setCoreFromVersion]
 
   League\Fractal\Manager:
     calls:
