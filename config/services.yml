@@ -1,0 +1,19 @@
+parameters:
+  fractal.base_url: 'http://example.com'
+
+services:
+  _defaults:
+    autowire: true
+
+  OpenEuropa\DrupalSiteMigration\:
+    resource: '../src'
+
+  League\Fractal\Manager:
+    calls:
+      - [setSerializer, ['@League\Fractal\Serializer\JsonApiSerializer']]
+
+  League\Fractal\Serializer\JsonApiSerializer:
+    arguments: [ "%fractal.base_url%" ]
+
+  Symfony\Component\Console\Application:
+    public: true
