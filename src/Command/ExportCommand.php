@@ -6,6 +6,7 @@ use \OpenEuropa\DrupalSiteMigration\Drupal\Driver;
 use League\Fractal\Manager;
 use League\Fractal\Resource\Item;
 use OpenEuropa\DrupalSiteMigration\Drupal\EntityLoader;
+use OpenEuropa\DrupalSiteMigration\ProcessorManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -31,17 +32,24 @@ class ExportCommand extends Command
     protected $exportWriter;
 
     /**
+     * @var \OpenEuropa\DrupalSiteMigration\ProcessorManager
+     */
+    protected $processorManager;
+
+    /**
      * SandboxCommand constructor.
      *
      * @param \League\Fractal\Manager $manager
      * @param \OpenEuropa\DrupalSiteMigration\Drupal\Driver $driver
      * @param \OpenEuropa\DrupalSiteMigration\ExportWriter $exportWriter
+     * @param \OpenEuropa\DrupalSiteMigration\ProcessorManager $processorManager
      */
-    public function __construct(Manager $manager, Driver $driver, ExportWriter $exportWriter)
+    public function __construct(Manager $manager, Driver $driver, ExportWriter $exportWriter, ProcessorManager $processorManager)
     {
         $this->manager = $manager;
         $this->driver = $driver;
         $this->exportWriter = $exportWriter;
+        $this->processorManager = $processorManager;
 
         parent::__construct();
     }
@@ -54,7 +62,6 @@ class ExportCommand extends Command
         $this->setName('export')
             ->addArgument('type', InputArgument::REQUIRED, 'Entity type, e.g. "node".')
             ->addArgument('bundle', InputArgument::REQUIRED, 'Entity bundle, e.g. "article".')
-
             ->setDescription('Export entities of given bundle.');
     }
 
@@ -81,18 +88,20 @@ class ExportCommand extends Command
         $io->progressStart($total);
 
         foreach ($entities as $entity) {
-            $resource = new Item($entity, function ($entity) use ($entityType, $bundle) {
+            // @todo: add support for multilingualism.
+            $language = 'und';
+
+            $resource = new Item($entity, function ($entity) use ($entityType, $bundle, $language) {
+                $id = $this->driver->getEntityId($entityType, $bundle);
                 $properties = [
+                    'id' => $id,
+                    'type' => $bundle,
                     'links' => [
-                        'self' => $bundle . '/' . $this->driver->getEntityId($entityType, $bundle)
+                        'self' => $bundle . '/' . $id
                     ]
                 ];
 
-                $properties += [
-                    'type' => $entity->type,
-                    'id' => $entity->nid,
-                    'title' => $entity->title,
-                ];
+                $this->processorManager->process($properties, $entity, $entityType, $bundle, $language);
 
                 return $properties;
             }, $bundle);

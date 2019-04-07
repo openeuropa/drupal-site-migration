@@ -1,6 +1,8 @@
 parameters:
   export.configuration:
-    article:
-      title:
-        source: title
-        processor: property
+
+    node:
+      article:
+        - source: title
+          destination: title
+          processor: PropertyProcessor

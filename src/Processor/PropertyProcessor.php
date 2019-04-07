@@ -10,10 +10,9 @@ class PropertyProcessor extends BaseProcessor
     /**
      * {@inheritdoc}
      */
-    public function process(\stdClass $entity, $field, array $configuration)
+    public function process(array &$properties, $entity, $language, array $configuration)
     {
-        return [
-            $field => $this->getValue($entity, $configuration['source']),
-        ];
+        $destination = $configuration['destination'];
+        $properties[$destination] = $this->getValue($entity, $configuration['source']);
     }
 }

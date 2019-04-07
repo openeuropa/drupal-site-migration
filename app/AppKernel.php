@@ -2,6 +2,7 @@
 
 namespace OpenEuropa;
 
+use OpenEuropa\DrupalSiteMigration\DependencyInjection\CompilerPass\CollectProcessorsCompilerPass;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -23,6 +24,7 @@ final class AppKernel extends Kernel
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
         $loader->load(__DIR__ . '/../config/services.yml');
+
         if (file_exists(__DIR__.'/../parameters.yml')) {
             $loader->load(__DIR__.'/../parameters.yml');
         }
@@ -34,6 +36,7 @@ final class AppKernel extends Kernel
     protected function build(ContainerBuilder $containerBuilder)
     {
         $containerBuilder->addCompilerPass(new CollectCommandsCompilerPass());
+        $containerBuilder->addCompilerPass(new CollectProcessorsCompilerPass());
     }
 
     /**

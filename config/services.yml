@@ -26,6 +26,9 @@ services:
     calls:
       - [setCoreFromVersion]
 
+  OpenEuropa\DrupalSiteMigration\ProcessorManager:
+    arguments: ['%export.configuration%']
+
   League\Fractal\Manager:
     calls:
       - [setSerializer, ['@League\Fractal\Serializer\JsonApiSerializer']]

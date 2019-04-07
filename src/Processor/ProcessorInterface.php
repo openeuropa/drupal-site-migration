@@ -11,12 +11,14 @@ interface ProcessorInterface
     /**
      * Process export field.
      *
+     * @param array $properties
+     *    List or existing properties, the processor will had its fields here.
      * @param \stdClass $entity
-     * @param string $field
+     *    Source entity.
+     * @param string $language
+     *    Language code to be processed.
      * @param array $configuration
-     *
-     * @return array
-     *   List of field(s) to be added to the export object.
+     *    Current processor configuration.
      */
-    public function process(\stdClass $entity, $field, array $configuration);
+    public function process(array &$properties, $entity, $language, array $configuration);
 }
