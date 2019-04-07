@@ -1,0 +1,12 @@
+parameters:
+  drupal.root: './site/web'
+  drupal.uri: 'http://drupal.docker.localhost:8000'
+
+  export.root: './content'
+  export.base_url: 'http://example.com'
+
+  export.configuration:
+    article:
+      title:
+        source: title
+        processor: property

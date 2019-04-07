@@ -1,8 +1,8 @@
 <?php
 
-namespace OpenEuropa\DrupalSiteMigration;
+namespace OpenEuropa\DrupalSiteMigration\Drupal;
 
-use Drupal\Driver\DrupalDriver;
+use OpenEuropa\DrupalSiteMigration\Drupal\Driver;
 
 /**
  * Load Drupal entities of a specific types.
@@ -10,16 +10,16 @@ use Drupal\Driver\DrupalDriver;
 class EntityLoader
 {
     /**
-     * @var \Drupal\Driver\DrupalDriver
+     * @var \OpenEuropa\DrupalSiteMigration\Drupal\Driver
      */
     protected $driver;
 
     /**
      * SandboxCommand constructor.
      *
-     * @param \Drupal\Driver\DrupalDriver $driver
+     * @param \OpenEuropa\DrupalSiteMigration\Drupal\Driver $driver
      */
-    public function __construct(DrupalDriver $driver)
+    public function __construct(Driver $driver)
     {
         $this->driver = $driver;
     }
@@ -39,7 +39,6 @@ class EntityLoader
      */
     public function loadEntities($entityType, $start = null, $length = null)
     {
-        // Bootstrap Drupal.
         $this->driver->bootstrap();
 
         // Instantiate Drupal 7 EntityFieldQuery.

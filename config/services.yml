@@ -1,8 +1,15 @@
 parameters:
-  export_root: './content'
-  fractal.base_url: 'http://example.com'
   drupal.root: './site/web'
   drupal.uri: 'http://drupal.docker.localhost:8000'
+
+  export.root: './content'
+  export.base_url: 'http://example.com'
+
+  export.configuration:
+    article:
+      title:
+        source: title
+        processor: property
 
 services:
   _defaults:
@@ -11,10 +18,14 @@ services:
   OpenEuropa\DrupalSiteMigration\:
     resource: '../src'
 
-  OpenEuropa\DrupalSiteMigration\ExportWriter:
-    arguments: ['%export_root%', '@Symfony\Component\Filesystem\Filesystem']
+  OpenEuropa\DrupalSiteMigration\Processor\:
+    resource: '../src/Processor'
+    arguments: ['@OpenEuropa\DrupalSiteMigration\Drupal\Driver']
 
-  Drupal\Driver\DrupalDriver:
+  OpenEuropa\DrupalSiteMigration\ExportWriter:
+    arguments: ['%export.root%', '@Symfony\Component\Filesystem\Filesystem']
+
+  OpenEuropa\DrupalSiteMigration\Drupal\Driver:
     arguments: ['%drupal.root%', '%drupal.uri%']
     calls:
       - [setCoreFromVersion]
@@ -24,7 +35,7 @@ services:
       - [setSerializer, ['@League\Fractal\Serializer\JsonApiSerializer']]
 
   League\Fractal\Serializer\JsonApiSerializer:
-    arguments: ['%fractal.base_url%']
+    arguments: ['%export.base_url%']
 
   Symfony\Component\Console\Application:
     public: true
