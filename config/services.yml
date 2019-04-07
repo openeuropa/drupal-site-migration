@@ -1,6 +1,7 @@
 parameters:
+  export_root: './content'
   fractal.base_url: 'http://example.com'
-  drupal.root: '/var/www/html/site/web'
+  drupal.root: './site/web'
   drupal.uri: 'http://drupal.docker.localhost:8000'
 
 services:
@@ -10,8 +11,11 @@ services:
   OpenEuropa\DrupalSiteMigration\:
     resource: '../src'
 
+  OpenEuropa\DrupalSiteMigration\ExportWriter:
+    arguments: ['%export_root%', '@Symfony\Component\Filesystem\Filesystem']
+
   Drupal\Driver\DrupalDriver:
-    arguments: [ '%drupal.root%', '%drupal.uri%' ]
+    arguments: ['%drupal.root%', '%drupal.uri%']
     calls:
       - [setCoreFromVersion]
 
@@ -20,7 +24,11 @@ services:
       - [setSerializer, ['@League\Fractal\Serializer\JsonApiSerializer']]
 
   League\Fractal\Serializer\JsonApiSerializer:
-    arguments: [ "%fractal.base_url%" ]
+    arguments: ['%fractal.base_url%']
 
   Symfony\Component\Console\Application:
     public: true
+
+  Symfony\Component\Filesystem\Filesystem:
+    shared: false
+
