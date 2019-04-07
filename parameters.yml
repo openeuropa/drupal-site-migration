@@ -3,15 +3,6 @@ parameters:
 
     node:
       article:
-
-        - source: title
-          destination: title
-          processor: PropertyProcessor
-
-        - source: created
-          destination: created
-          processor: PropertyProcessor
-
-        - source: body
-          destination: body
-          processor: LongTextAndSummaryProcessor
+        - { processor: NodeMetadataProcessor }
+        - { processor: PropertyProcessor, source: title, destination: title }
+        - { processor: LongTextAndSummaryProcessor, source: body, destination: body }

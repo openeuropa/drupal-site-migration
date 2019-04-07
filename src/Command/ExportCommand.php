@@ -4,8 +4,7 @@ namespace OpenEuropa\DrupalSiteMigration\Command;
 
 use \OpenEuropa\DrupalSiteMigration\Drupal\Driver;
 use League\Fractal\Manager;
-use League\Fractal\Resource\Item;
-use OpenEuropa\DrupalSiteMigration\Drupal\EntityLoader;
+use League\Fractal\Resource;
 use OpenEuropa\DrupalSiteMigration\ProcessorManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -37,7 +36,7 @@ class ExportCommand extends Command
     protected $processorManager;
 
     /**
-     * SandboxCommand constructor.
+     * ExportCommand constructor.
      *
      * @param \League\Fractal\Manager $manager
      * @param \OpenEuropa\DrupalSiteMigration\Drupal\Driver $driver
@@ -91,30 +90,50 @@ class ExportCommand extends Command
             // @todo: add support for multilingualism.
             $language = 'und';
 
-            $resource = new Item($entity, function ($entity) use ($entityType, $bundle, $language) {
-                $id = $this->driver->getEntityId($entityType, $entity);
-                $properties = [
-                    'id' => $id,
-                    'type' => $bundle,
-                    'language' => $language,
-                    'links' => [
-                        'self' => $bundle . '/' . $id
-                    ]
-                ];
-
-                $this->processorManager->process($properties, $entity, $entityType, $bundle, $language);
-
-                return $properties;
+            // Create a new JSON API resource.
+            $resource = new Resource\Item($entity, function ($entity) use ($entityType, $bundle, $language) {
+                $attributes = $this->getDefaultAttributes($entity, $entityType, $bundle);
+                $this->processorManager->processAttributes($attributes, $entity, $entityType, $bundle, $language);
+                return $attributes;
             }, $bundle);
 
+            // Add metadata to JSON API resource.
+            $metadata = [];
+            $this->processorManager->processMetadata($metadata, $entity, $entityType, $bundle, $language);
+            $resource->setMeta($metadata);
+
+            // Serialize resource in JSON format.
             $content = $this->manager->createData($resource)->toJson(JSON_PRETTY_PRINT);
-            $this->exportWriter->write($entityType, $bundle, 'und', $entity->nid, $content);
+
+            // Write resource on the filesystem.
+            $this->exportWriter->write($entityType, $bundle, $language, $entity->nid, $content);
 
             $io->progressAdvance();
         }
 
         $io->progressFinish();
 
-        $io->success("{$total} entities exported to " . $this->exportWriter->getContentPath($entityType, $bundle));
+        $path = $this->exportWriter->getContentPath($entityType, $bundle);
+        $io->success("{$total} entities exported to " . realpath($path));
+    }
+
+    /**
+     * Get default attributes.
+     *
+     * @param \stdClass $entity
+     * @param $entityType
+     * @param $bundle
+     *
+     * @return array
+     */
+    protected function getDefaultAttributes(\stdClass $entity, $entityType, $bundle)
+    {
+        $id = $this->driver->getEntityId($entityType, $entity);
+        return [
+            'id' => $id,
+            'links' => [
+                'self' => $bundle . '/' . $id
+            ]
+        ];
     }
 }

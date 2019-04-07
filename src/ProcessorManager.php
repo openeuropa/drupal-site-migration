@@ -44,29 +44,74 @@ class ProcessorManager
     }
 
     /**
-     * Process properties according to export configuration.
+     * Process attributes.
      *
-     * @param array $properties
+     * @param array $attributes
      * @param $entity
      * @param $entityType
      * @param $bundle
      * @param $language
      */
-    public function process(array &$properties, $entity, $entityType, $bundle, $language)
+    public function processAttributes(array &$attributes, $entity, $entityType, $bundle, $language)
+    {
+        foreach ($this->getConfiguration($entityType, $bundle) as $key => $configuration) {
+            $this->getProcessor($configuration['processor'], $key, $entityType, $bundle)
+                ->processAttributes($attributes, $entity, $language, $configuration);
+        }
+        ksort($attributes);
+    }
+
+    /**
+     * Process metadata.
+     *
+     * @param array $metadata
+     * @param $entity
+     * @param $entityType
+     * @param $bundle
+     * @param $language
+     */
+    public function processMetadata(array &$metadata, $entity, $entityType, $bundle, $language)
+    {
+        foreach ($this->getConfiguration($entityType, $bundle) as $key => $configuration) {
+            $this->getProcessor($configuration['processor'], $key, $entityType, $bundle)
+                ->processMetadata($metadata, $entity, $language, $configuration);
+        }
+        ksort($metadata);
+    }
+
+    /**
+     * Get configuration.
+     *
+     * @param string $entityType
+     * @param string $bundle
+     *
+     * @return array
+     */
+    protected function getConfiguration($entityType, $bundle)
     {
         if (!isset($this->configuration[$entityType][$bundle])) {
             throw new \RuntimeException("No export configuration found for {$entityType} of type {$bundle}.");
         }
 
-        foreach ($this->configuration[$entityType][$bundle] as $key => $configuration) {
-            if (!isset($this->processors[$configuration['processor']])) {
-                throw new \RuntimeException("Processor {$configuration['processor']} not found on item {$key} for {$entityType} of type {$bundle}.");
-            }
-            /** @var ProcessorInterface $processor */
-            $processor = $this->processors[$configuration['processor']];
-            $processor->process($properties, $entity, $language, $configuration);
+        return $this->configuration[$entityType][$bundle];
+    }
+
+    /**
+     * Get processor instance.
+     *
+     * @param string $processor
+     * @param int $key
+     * @param string $entityType
+     * @param string $bundle
+     *
+     * @return \OpenEuropa\DrupalSiteMigration\Processor\ProcessorInterface
+     */
+    protected function getProcessor($processor, $key, $entityType, $bundle)
+    {
+        if (!isset($this->processors[$processor])) {
+            throw new \RuntimeException("Processor {$processor} not found on item {$key} for {$entityType} of type {$bundle}.");
         }
 
-        ksort($properties);
+        return $this->processors[$processor];
     }
 }

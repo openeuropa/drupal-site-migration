@@ -4,15 +4,15 @@
 namespace OpenEuropa\DrupalSiteMigration\Processor;
 
 /**
- * Define processor plugin interface.
+ * Define processor interface.
  */
 interface ProcessorInterface
 {
     /**
-     * Process export field.
+     * Process JSON API attributes.
      *
-     * @param array $properties
-     *    List or existing properties, the processor will had its fields here.
+     * @param array $attributes
+     *    List or existing attributes, the processor will add its fields here.
      * @param \stdClass $entity
      *    Source entity.
      * @param string $language
@@ -20,5 +20,19 @@ interface ProcessorInterface
      * @param array $configuration
      *    Current processor configuration.
      */
-    public function process(array &$properties, $entity, $language, array $configuration);
+    public function processAttributes(array &$attributes, \stdClass $entity, $language, array $configuration);
+
+    /**
+     * Process JSON API metadata.
+     *
+     * @param array $metadata
+     *    Existing metadata, the processor will add its fields here.
+     * @param \stdClass $entity
+     *    Source entity.
+     * @param string $language
+     *    Language code to be processed.
+     * @param array $configuration
+     *    Current processor configuration.
+     */
+    public function processMetadata(array &$metadata, \stdClass $entity, $language, array $configuration);
 }

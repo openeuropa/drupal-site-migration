@@ -20,7 +20,7 @@ After that start Docker containers by running:
 docker-compose up -d
 ```
 
-Your site will be available at: http://portainer.drupal.docker.localhost:8000
+Your site will be available at: http://drupal.docker.localhost:8000
 
 Proceed with installing the standard profile using the following database configuration:
 
