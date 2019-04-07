@@ -36,3 +36,14 @@ For list of available commands run inside the container:
 ```bash
 docker-compose exec php ./bin/console
 ```
+
+To export content run:
+
+```bash
+docker-compose exec php ./bin/console export node article
+```
+
+Content will be exported in `./content`.
+
+Change content export configuration by editing `./parameters.yml`. 
+
