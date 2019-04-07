@@ -4,6 +4,7 @@
         "id": "1",
         "attributes": {
             "type": "article",
+            "language": "und",
             "title": "Ex irure adipisci laborum quia facere",
             "created": "1554585365",
             "body_value": "<p>Sed non eum veniam<\/p>\n",

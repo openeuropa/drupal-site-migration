@@ -96,6 +96,7 @@ class ExportCommand extends Command
                 $properties = [
                     'id' => $id,
                     'type' => $bundle,
+                    'language' => $language,
                     'links' => [
                         'self' => $bundle . '/' . $id
                     ]
