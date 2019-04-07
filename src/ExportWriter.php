@@ -3,7 +3,6 @@
 namespace OpenEuropa\DrupalSiteMigration;
 
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 
 /**
  * Write exported JSON files to disk.
@@ -28,8 +27,8 @@ class ExportWriter
      */
     public function __construct($exportRoot, Filesystem $fs)
     {
-        $this->fs = $fs;
         $this->exportRoot = $exportRoot;
+        $this->fs = $fs;
     }
 
     /**
