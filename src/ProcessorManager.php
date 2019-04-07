@@ -66,5 +66,7 @@ class ProcessorManager
             $processor = $this->processors[$configuration['processor']];
             $processor->process($properties, $entity, $language, $configuration);
         }
+
+        ksort($properties);
     }
 }

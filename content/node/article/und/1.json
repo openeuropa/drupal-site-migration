@@ -3,13 +3,13 @@
         "type": "article",
         "id": "1",
         "attributes": {
-            "type": "article",
+            "body_format": "filtered_html",
+            "body_summary": "",
+            "body_value": "<p>Sed non eum veniam<\/p>\n",
+            "created": "1554585365",
             "language": "und",
             "title": "Ex irure adipisci laborum quia facere",
-            "created": "1554585365",
-            "body_value": "<p>Sed non eum veniam<\/p>\n",
-            "body_summary": "",
-            "body_format": "filtered_html"
+            "type": "article"
         },
         "links": {
             "self": "http:\/\/example.com\/article\/1"
