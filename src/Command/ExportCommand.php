@@ -92,7 +92,7 @@ class ExportCommand extends Command
             $language = 'und';
 
             $resource = new Item($entity, function ($entity) use ($entityType, $bundle, $language) {
-                $id = $this->driver->getEntityId($entityType, $bundle);
+                $id = $this->driver->getEntityId($entityType, $entity);
                 $properties = [
                     'id' => $id,
                     'type' => $bundle,
