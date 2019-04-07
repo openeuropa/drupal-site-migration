@@ -59,8 +59,22 @@ class ExportWriter
      */
     public function clear($entityType, $bundle)
     {
+        $this->fs->remove($this->getContentPath($entityType, $bundle));
+    }
+
+    /**
+     * Get content path root.
+     *
+     * @param $entityType
+     * @param $bundle
+     *
+     * @return string
+     */
+    public function getContentPath($entityType, $bundle)
+    {
+        // Clear directory and recreated it empty.
         $root = $this->ensureRoot();
-        $this->fs->remove("$root/$entityType/$bundle");
+        return "$root/$entityType/$bundle";
     }
 
     /**
@@ -74,9 +88,7 @@ class ExportWriter
      */
     protected function ensureDirectory($entityType, $bundle, $language)
     {
-        // Clear directory and recreated it empty.
-        $root = $this->ensureRoot();
-        $directory = "$root/$entityType/$bundle/$language";
+        $directory = $this->getContentPath($entityType, $bundle) . '/' . $language;
         $this->fs->mkdir($directory);
 
         return $directory;

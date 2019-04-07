@@ -1,0 +1,6 @@
+parameters:
+  export.configuration:
+    article:
+      title:
+        source: title
+        processor: property
