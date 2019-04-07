@@ -1,0 +1,17 @@
+{
+    "data": {
+        "type": "article",
+        "id": "2",
+        "attributes": {
+            "type": "article",
+            "title": "Irure natus ipsum enim corrupti omnis sit reprehenderit",
+            "created": "1554632512",
+            "body_value": "<p>In ex ex omnis autemIn ex ex omnis autemIn ex ex omnis autemIn ex ex omnis autemIn ex ex omnis autemIn ex ex omnis autemIn ex ex omnis autemIn ex ex omnis autemIn ex ex omnis autemIn ex ex omnis autemIn ex ex omnis autemIn ex ex omnis autemIn ex ex omnis autemIn ex ex omnis autemIn ex ex omnis autemIn ex ex omnis autemIn ex ex omnis autemIn ex ex omnis autemIn ex ex omnis autemIn ex ex omnis autem<\/p>\n",
+            "body_summary": "<p>In ex ex omnis autemIn ex ex omnis autemIn ex ex omnis autemIn ex ex omnis autemIn ex ex omnis autemIn ex ex omnis autemIn ex ex omnis autemIn ex ex omnis autemIn ex ex omnis autem<\/p>\n",
+            "body_format": "filtered_html"
+        },
+        "links": {
+            "self": "http:\/\/example.com\/article\/2"
+        }
+    }
+}
